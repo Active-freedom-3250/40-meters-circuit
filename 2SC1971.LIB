@@ -1,0 +1,28 @@
+* 2SC1971 NPN High Power Transistor - Generic LTspice Model
+
+.model 2SC1971 NPN (
++ IS=1E-14       ; Saturation current
++ BF=50          ; DC current gain (hFE), ajustable
++ NF=1           ; Emission coefficient
++ VAF=100        ; Early voltage
++ IKF=0.1        ; High current factor
++ ISE=1E-12
++ NE=1
++ BR=1           ; Reverse gain
++ NR=1
++ VAR=50
++ RC=0.01        ; Collector resistance
++ RE=0.01        ; Emitter resistance
++ CJE=100p       ; Base-emitter junction capacitance
++ VJE=0.75
++ CJC=50p        ; Base-collector junction capacitance
++ VJC=0.75
++ TF=0.5n       ; Forward transit time
++ TR=1n         ; Reverse transit time
++ XTB=1
++ RB=0.5        ; Base resistance
++ RC=0.01       ; Collector resistance
++ RE=0.01       ; Emitter resistance
++ EG=1.11       ; Bandgap
++ IS=1E-14
++ )
