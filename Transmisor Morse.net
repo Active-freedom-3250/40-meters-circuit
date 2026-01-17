@@ -1,0 +1,76 @@
+* C:\Users\Lenovo\OneDrive\Documentos\LTspice\Transmisor Morse.asc
+Q1 o N005 N006 0 2N2222
+V1 N001 N008 12
+R1 N001 o 518
+R2 N006 N008 5.5k
+R3 N005 N008 100k
+R4 N001 N005 1k
+C2 N008 N009 10n
+C1 N007 N008 1n
+L1 N007 N009 500n
+C3 N006 N008 1n
+C4 N005 N009 1m
+C5 o N007 1m
+V2 N008 0 12
+RB1 N001 N003 4.7k
+RC N001 N002 1k
+RE N004 0 10k
+RB2 N003 0 220
+Cbp N004 0 1.15n
+Q2 N002 N003 N004 0 2SC1971
+XU1 o Input N001 0 Input level1 Avol=1Meg GBW=100Meg Vos=0 En=0 Enk=0 In=0 Ink=0 Rin=500Meg
+R5 Output 0 50
+Cout Output N002 10n
+Cin N003 Input 10n
+.model NPN NPN
+.model PNP PNP
+.lib C:\Users\Lenovo\AppData\Local\LTspice\lib\cmp\standard.bjt
+* f=7.025M
+* f= 1/(6*sqr(L*(C1*C2/(C1+C2)))
+* B ---> int[0 2pi](B*r*dphi)= N*uo*I
+* B* r* 2pi =N*uo* I --->  B =N*uo*I / 2*pi*rm (Toroide Espira cuadrada)
+* L= d_int (B*ds) / d_I = d_(N*B*(rE-rI)*h)/d_I = N^2 *uo*h*(rE-rI)/ 2*pi*rm
+* L=N^2*uo*h*(rE-rI)/pi*(rE+rI)
+* Elijo C2=10nf     C1=1nf       C1*C2/(C1+C2) = 0.9nf
+* (7.025M*6)^2= 1/(0.9nf*L) -----> L= 1/ (0.9nf*(7.025M*6)^2)=625.4nH
+* N=6  h=0,65cm re=1cm ri=0,7cm
+.tran 0 200u 100u 0.001u uic
+* Gain(L/C)=c1/c2=0.1
+* Gain(Amp)*Gain(L/C)>=1  ------>  Gain(amp)>=10
+.include "C:\Users\Lenovo\OneDrive\Documentos\LTspice\Libreria transistor rf\2SC1971.LIB"
+* Colpitts
+* Buffer
+* Calculos Colpitts
+* 1vp----->12vp
+* G=12=gm*RC//RL,  RL=50  , gm=ICQ/VT
+* (ICQ*RC)/(50+RC) =6.22m
+* ICQ*RC=0.311+6.22m*RC
+* RC=0.311/(ICQ-6.22m)-----> ICQ>6.22m
+* Polarización:
+* Me)24V-ICQ/beta*RB-0.7V-ICQ*RE*(beta+1)/beta=0
+* 23.3V*beta=ICQ*(RB+RE*(beta+1))
+* Ms)24V-ICQ*RC-VCEQ-ICQ*RE*(beta+1)/beta=0 ----VCEQ=VCC/2=12V
+* 12V=ICQ*(RC+RE*(beta+1)/beta)
+* In)VB=24V-RB*ICQ/beta=24V*RB2/(RB1+RB2)
+* Calculos transistor
+* 2SC1971 (beta 50)
+* 3) 1165V=ICQ*(RB+RE*51)
+* 2) 12V=ICQ*(RC+RE*1.02)
+* 4) 1V-RB*ICQ/1200=RB2/(RB1+RB2)
+* 1) RC=0.311/(ICQ-6.22m)
+* Supongo ICQ=317mA
+* RC=1
+* RE=36.13
+* RB=1.83k
+* 0.52V=RB2/(RB1+RB2)
+* RB1=874   RB2=946
+* Amplificador
+* Rout=RC//RL=50/51=1 ---> Cout=41.66nF
+* Rin=Rpi//RB=(beta*VT/ICQ) //RB
+* Cbp=1.15nF
+* --->Checkear
+* 4.08//RB=4.08 ---> Cin=10.41nF
+* fsim=7.017MHz
+.lib UniversalOpAmp1.lib
+.backanno
+.end
